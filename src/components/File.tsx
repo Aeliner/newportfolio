@@ -1,8 +1,11 @@
+import FolderIcon from '@/assets/folderIcon.png';
+import TextIcon from '@/assets/textIcon.png';
 import React from 'react';
+import Img from 'react-cool-img';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import Img from 'react-cool-img';
-import TextIcon from '@/assets/textIcon.png';
+import ReactDOM from 'react-dom';
+import Window from './Window';
 
 const FileContainer = styled.div`
   ${tw`flex flex-col p-1 bg-transparent hover:shadow-2xl`}
@@ -22,12 +25,26 @@ const FileName = styled.h2`
 interface FileProps {
   fileName: string;
   content?: string;
+  type: string;
 }
 
-const File = ({ fileName, content = 'Write your content here' }: FileProps) => {
+const Icons: any = {
+  text: TextIcon,
+  folder: FolderIcon,
+};
+
+const handleDoubleClick = () => {
+  console.log('did it');
+};
+
+const File = ({
+  fileName,
+  content = 'Write your content here',
+  type = 'text',
+}: FileProps) => {
   return (
-    <FileContainer tabIndex={0}>
-      <Img src={TextIcon} />
+    <FileContainer onDoubleClick={handleDoubleClick} tabIndex={0}>
+      <Img src={Icons[type]} />
       <FileName>{fileName}</FileName>
     </FileContainer>
   );
