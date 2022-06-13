@@ -5,18 +5,22 @@ import BgImage from './assets/defaultBackground.jpg';
 import Img from 'react-cool-img';
 
 import BlurredImage from './assets/blurredBackground.jpg';
-import File from './components/File';
+import File from './components/File/File';
+import Footer from './components/Footer/Footer';
+import { useGlobal } from '@/store/slices/GlobalSlice';
+import { WindowType } from '@/typings/Window';
+import Window from '@/components/Window/Window';
+import { Animation } from '@/components/Window/StyledWindow';
 
 const AppComponent = styled.div`
-  ${tw`w-screen h-screen flex flex-col`}
+  ${tw`w-screen h-screen flex flex-col overflow-hidden`}
 `;
 
 const DesktopContainer = styled.div`
-  ${tw`h-full w-full relative`}
-`;
-
-const ActionBarContainer = styled.div`
-  ${tw`bg-gray-700 w-full h-8`}
+  ${tw`h-full w-full relative flex flex-col justify-between`}
+  .minimized {
+    ${Animation}
+  }
 `;
 
 const BackgroundComponent = styled(Img)`
@@ -24,10 +28,24 @@ const BackgroundComponent = styled(Img)`
 `;
 
 const FileContainer = styled.div`
-  ${tw`grid grid-cols-24 grid-rows-12 h-full w-full`}
+  ${tw`grid grid-cols-24 grid-rows-10 w-full`}
 `;
 
+const renderWindows = (windows: WindowType[]) => {
+  return windows.map(window => {
+    return (
+      <Window
+        coordinates={{ x: window.coordinates.x, y: window.coordinates.y }}
+        id={window.id}
+        content={window.content}
+        title={window.title}
+      />
+    );
+  });
+};
+
 const AppContainer = () => {
+  const { windows } = useGlobal();
   return (
     <AppComponent>
       <BackgroundComponent
@@ -37,18 +55,19 @@ const AppContainer = () => {
         alt='REACT COOL IMG'
       />
       <DesktopContainer id='desktop'>
+        {renderWindows.length > 0 && renderWindows(windows)}
         <FileContainer>
           <File type='folder' fileName='Folder 1' />
-          <File type='text' fileName='File 2' />
-          <File type='text' fileName='File 3' />
-          <File type='text' fileName='File 4' />
-          <File type='text' fileName='File 5' />
-          <File type='text' fileName='File 6' />
-          <File type='text' fileName='File 7' />
-          <File type='text' fileName='File 8' />
+          <File type='file' fileName='File 2' />
+          <File type='file' fileName='File 3' />
+          <File type='file' fileName='File 4' />
+          <File type='file' fileName='File 5' />
+          <File type='file' fileName='File 6' />
+          <File type='file' fileName='File 7' />
+          <File type='file' fileName='File 8' />
         </FileContainer>
+        <Footer />
       </DesktopContainer>
-      <ActionBarContainer></ActionBarContainer>
     </AppComponent>
   );
 };

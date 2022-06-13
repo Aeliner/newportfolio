@@ -2,18 +2,23 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
-    "skipLibCheck": false,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react"
+    "baseUrl": ".",
+    "jsx": "react",
+    "incremental": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
   },
-  "include": ["./src", "types"]
+  "include": ["vite-env.d.ts", "**/*.ts", "**/*.tsx", "types"],
+  "exclude": ["node_modules"]
 }

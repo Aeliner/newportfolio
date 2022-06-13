@@ -1,11 +1,10 @@
-import FolderIcon from '@/assets/folderIcon.png';
-import TextIcon from '@/assets/textIcon.png';
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import Img from 'react-cool-img';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import ReactDOM from 'react-dom';
-import Window from './Window';
+import { useGlobal } from '@/store/slices/GlobalSlice';
+import { revisedRandId } from '@/utils/generateId';
+import { Icons } from './FileIcons';
 
 const FileContainer = styled.div`
   ${tw`flex flex-col p-1 bg-transparent hover:shadow-2xl`}
@@ -15,6 +14,7 @@ const FileContainer = styled.div`
   &:hover,
   :focus {
     box-shadow: inset 0px 0px 0px 1px rgba(0, 221, 255, 1);
+    background: rgba(0, 221, 255, 0.15);
   }
 `;
 
@@ -25,23 +25,29 @@ const FileName = styled.h2`
 interface FileProps {
   fileName: string;
   content?: string;
-  type: string;
+  type: 'file' | 'folder';
 }
-
-const Icons: any = {
-  text: TextIcon,
-  folder: FolderIcon,
-};
-
-const handleDoubleClick = () => {
-  console.log('did it');
-};
 
 const File = ({
   fileName,
   content = 'Write your content here',
-  type = 'text',
+  type = 'file',
 }: FileProps) => {
+  const { windows, setWindows } = useGlobal();
+  const handleDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
+    setWindows([
+      ...windows,
+      {
+        id: revisedRandId(),
+        coordinates: { x: e.clientX, y: e.clientY },
+        title: fileName,
+        content: content,
+        type: type,
+        state: 'open',
+      },
+    ]);
+  };
+
   return (
     <FileContainer onDoubleClick={handleDoubleClick} tabIndex={0}>
       <Img src={Icons[type]} />
