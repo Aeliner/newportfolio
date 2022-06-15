@@ -10,7 +10,7 @@ import Footer from './components/Footer/Footer';
 import { useGlobal } from '@/store/slices/GlobalSlice';
 import { WindowType } from '@/typings/Window';
 import Window from '@/components/Window/Window';
-import { Animation } from '@/components/Window/StyledWindow';
+import { Animation, ReverseAnimation } from '@/components/Window/StyledWindow';
 
 const AppComponent = styled.div`
   ${tw`w-screen h-screen flex flex-col overflow-hidden`}
@@ -18,8 +18,27 @@ const AppComponent = styled.div`
 
 const DesktopContainer = styled.div`
   ${tw`h-full w-full relative flex flex-col justify-between`}
+  .window {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    transition: width 0.15s cubic-bezier(0.47, 0, 0.745, 0.715),
+      height 0.15s cubic-bezier(0.47, 0, 0.745, 0.715),
+      opacity 0.15s cubic-bezier(0.47, 0, 0.745, 0.715);
+  }
   .minimized {
-    ${Animation}
+    width: 0;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+  }
+  .maximized {
+    width: 800px;
+    height: 600px;
+    opacity: 1;
+  }
+  .preview {
+    transform: scale(0.1);
   }
 `;
 
@@ -29,6 +48,9 @@ const BackgroundComponent = styled(Img)`
 
 const FileContainer = styled.div`
   ${tw`grid grid-cols-24 grid-rows-10 w-full`}
+`;
+const PreviewContainer = styled.div`
+  ${tw`absolute bottom-[calc(4rem * -3)] left-[calc(4rem * -4.5)] bg-white scale-[0.2]`}
 `;
 
 const renderWindows = (windows: WindowType[]) => {
@@ -54,7 +76,9 @@ const AppContainer = () => {
         error={BlurredImage}
         alt='REACT COOL IMG'
       />
+
       <DesktopContainer id='desktop'>
+        <PreviewContainer id='preview' />
         {renderWindows.length > 0 && renderWindows(windows)}
         <FileContainer>
           <File type='folder' fileName='Folder 1' />

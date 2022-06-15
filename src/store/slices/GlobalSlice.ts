@@ -5,6 +5,7 @@ import type { WindowType } from '../../typings/Window';
 
 const initialState = {
   windows: Array<WindowType>(),
+  activeWindow: '',
 };
 
 const GlobalSlice = createSlice({
@@ -13,6 +14,9 @@ const GlobalSlice = createSlice({
   reducers: {
     setWindows(state, action: PayloadAction<Array<WindowType>>) {
       state.windows = action.payload;
+    },
+    setActiveWindow(state, action: PayloadAction<string>) {
+      state.activeWindow = action.payload;
     },
   },
   extraReducers: {},
@@ -23,10 +27,13 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export function useGlobal() {
   const dispatch = useAppDispatch();
-  const { windows } = useAppSelector(state => state.GlobalSlice);
+  const { windows, activeWindow } = useAppSelector(state => state.GlobalSlice);
 
   return {
     windows,
+    activeWindow,
+    setActiveWindow: (id: string) =>
+      dispatch(GlobalSlice.actions.setActiveWindow(id)),
     setWindows: (payload: WindowType[]) =>
       dispatch(GlobalSlice.actions.setWindows(payload)),
   };

@@ -1,22 +1,12 @@
 import styled, { css, keyframes } from 'styled-components';
 import tw from 'twin.macro';
 
-interface ContainerProps {
-  minimized: boolean;
-}
-
-const minimize = keyframes`
-  0% { opacity: 1;}
-    99% { opacity: 0.01;}
-    100% { opacity: 1;width: 0; height: 0; visibility: hidden;}
-  `;
-
-const animation = css`
-  animation: ${minimize} 0.15s cubic-bezier(0.47, 0, 0.745, 0.715) forwards;
+const Container = styled.div`
+  ${tw`absolute z-10`}
 `;
 
-const WindowContainer = styled.div<ContainerProps>`
-  ${tw`w-full h-full bg-white z-10 shadow-window`}
+const WindowContainer = styled.div`
+  ${tw`absolute bg-white z-10 shadow-window`}
 `;
 
 const WindowLayout = styled.div`
@@ -30,8 +20,27 @@ const ButtonsContainer = styled.div`
   }
 `;
 
+const minimize = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(.5);
+  }
+
+  `;
+
+const Animation = css`
+  animation: ${minimize} 0.15s cubic-bezier(0.47, 0, 0.745, 0.715) forwards;
+`;
+const ReverseAnimation = css`
+  animation: ${minimize} 0.15s cubic-bezier(0.47, 0, 0.745, 0.715) reverse;
+`;
+
 export {
-  animation as Animation,
+  Animation,
+  ReverseAnimation,
+  Container,
   WindowContainer,
   WindowLayout,
   ButtonsContainer,
