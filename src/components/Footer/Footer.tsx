@@ -1,45 +1,27 @@
-import { ReactComponent as WindowsLogo } from '@/assets/window.svg';
+import WindowsLogo from '@/assets/WindowIcon';
 import { Icons } from '@/components/File/FileIcons';
 import Window from '@/components/Window/Window';
 import { useGlobal } from '@/store/slices/GlobalSlice';
 import { WindowType } from '@/typings/Window';
 import React from 'react';
 import Img from 'react-cool-img';
-import ReactDOM from 'react-dom';
-import styled from 'styled-components';
-import tw from 'twin.macro';
-import store from '@/store';
-import { Provider } from 'react-redux';
-const ActionBarContainer = styled.div`
-  ${tw`bg-gray-700 w-full h-12 flex`}
-`;
+import { ActionBarContainer, ImageContainer } from './Footer.styles';
+import domtoimage from 'dom-to-image';
 
-const ImageContainer = styled.div`
-  ${tw`h-12 w-12 flex justify-center items-center text-white hover:cursor-pointer hover:bg-gray-600 hover:text-[#00adef]`}
-  svg {
-    ${tw`w-6 h-6`}
-  }
-  img {
-    ${tw`w-6 h-6`}
-  }
-`;
-
-const handleMouseEnter = (window: WindowType): void => {
+const handleMouseEnter = async (window: WindowType): Promise<void> => {
   const previewContainer = document.getElementById('preview');
-  const Component = (
-    <Provider store={store}>
-      <Window
-        id={`preview${window.id}`}
-        title={window.title}
-        content={window.content}
-        coordinates={window.coordinates}
-        isPreview={true}
-      />
-    </Provider>
-  );
-  console.log(Component);
-
-  ReactDOM.render(Component, previewContainer);
+  const windowElement = document.getElementById(`child${window.id}`);
+  if (!previewContainer || !windowElement) return;
+  domtoimage
+    .toPng(windowElement)
+    .then(function (dataUrl) {
+      var img = new Image();
+      img.src = dataUrl;
+      document.body.appendChild(img);
+    })
+    .catch(function (error) {
+      console.error('oops, something went wrong!', error);
+    });
 };
 
 const handleMouseLeave = (window: WindowType): void => {
@@ -69,6 +51,7 @@ const Footer = () => {
       </ImageContainer>
       {windows.map((window: WindowType) => (
         <ImageContainer
+          key={window.id}
           onMouseEnter={() => handleMouseEnter(window)}
           onMouseLeave={() => handleMouseLeave(window)}
           id={`Icon${window.id}`}
