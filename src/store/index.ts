@@ -2,10 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
 import GlobalSlice from './slices/GlobalSlice';
+import WindowSlice from './slices/WindowSlice';
+import FileSlice from './slices/FileSlice';
 
 const store = configureStore({
   reducer: {
-    GlobalSlice,
+    global: GlobalSlice,
+    windows: WindowSlice,
+    files: FileSlice,
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware(),
 });
